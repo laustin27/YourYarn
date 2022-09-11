@@ -1,20 +1,40 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+// Grabbed from https://blog.logrocket.com/react-native-jwt-authentication-using-axios-interceptors/
+import React, {useCallback, useContext, useEffect, useState} from 'react';
+import {AuthContext} from './src/Context/AuthContext';
+import {createStackNavigator} from '@react-navigation/stack';
+import LoginScreen from './src/Screens/LoginScreen';
+import TabsScreen from './src/Screens/TabsScreen';
+import LoadingScreen from './src/Screens/LoadingScreen';
 
-export default function App() {
+const Stack = createStackNavigator();
+
+const App = () => {
+  const {authState} = useContext(AuthContext);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+    <Stack.Navigator>
+      {authState.isLoading && <Stack.Screen name="Loading" component={LoadingScreen} />}
+      {authState.userToken == null ? (
+            // No token found, user isn't signed in
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{
+                headerShown: false,
+                // When logging out, a pop animation feels intuitive
+                animationTypeForReplace: authState.isSignout ? 'pop' : 'push',
+              }}
+            />
+          ) : (
+            // User is signed in
+            <Stack.Screen 
+              name="Tabs" 
+              component={TabsScreen}
+              options={{headerShown: false}}
+               />
+          )}
+    </Stack.Navigator>
+  )
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
