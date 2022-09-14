@@ -2,10 +2,10 @@ import * as React from 'react';
 import { Text} from 'react-native';
 import Body from '../Wrappers/Body'
 
-export default function Home() {
+export default function PatternScreen() {
   return (
     <Body>
-      <Text>Home!</Text>
+      <Text>Patterns!</Text>
     </Body>
   );
 }

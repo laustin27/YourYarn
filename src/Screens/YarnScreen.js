@@ -2,10 +2,10 @@ import * as React from 'react';
 import { Text} from 'react-native';
 import Body from '../Wrappers/Body'
 
-export default function Patterns() {
+export default function YarnScreen() {
   return (
     <Body>
-      <Text>Patterns!</Text>
+      <Text>Yarn!</Text>
     </Body>
   );
 }

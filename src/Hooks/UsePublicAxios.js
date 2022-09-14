@@ -1,9 +1,8 @@
-import React, {useContext} from "react";
-import { apiUrl } from "../Context/AxiosContext";
 import axios from 'axios';
+import { API_URL } from "../Constants";
 
 export default function usePublicAxios() {
-    const publicAxios = axios.create({ baseURL: apiUrl });
+    const publicAxios = axios.create({ baseURL: API_URL });
 
     publicAxios.interceptors.request.use(
         config => {

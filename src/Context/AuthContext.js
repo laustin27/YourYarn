@@ -1,8 +1,8 @@
-// Grabbed from https://blog.logrocket.com/react-native-jwt-authentication-using-axios-interceptors/
 import React from 'react';
-import * as SecureStore from 'expo-secure-store';
 import {Alert} from 'react-native';
+import { USER_KEY } from '../Constants';
 import usePublicAxios from '../Hooks/UsePublicAxios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthContext = React.createContext(null);
 
@@ -12,50 +12,52 @@ function AuthProvider({children}) {
   const [authState, authDispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
-        case 'RESTORE_TOKEN':
+        case 'RESTORE_LOGGED_IN_USER':
           return {
             ...prevState,
-            userToken: action.token,
             isLoading: false,
+            loggedInUser : action?.loggedInUser
           };
         case 'LOGIN':
           return {
             ...prevState,
             isSignout: false,
-            userToken: action.token,
+            loggedInUser : action?.loggedInUser
           };
         case 'LOGOUT':
           return {
             ...prevState,
             isSignout: true,
-            userToken: null,
+            loggedInUser : null
           };
       }
     },
     {
       isLoading: true,
       isSignout: false,
-      userToken: null,
+      loggedInUser : null
     }
   );
 
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
-      let userToken;
+      let userJson;
 
       try {
         // Restore token stored in `SecureStore` or any other encrypted storage
-        userToken = await SecureStore.getItemAsync('token');
+        userJson = await AsyncStorage.getItem(USER_KEY);
       } catch (e) {
         // Restoring token failed
       }
 
-      // After restoring token, we may need to validate it in production apps
+      let user;
+      if (userJson) { user = JSON.parse(userJson); }
 
+      // After restoring token, we may need to validate it in production apps
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
-      authDispatch({ type: 'RESTORE_TOKEN', token: userToken });
+      authDispatch({ type: 'RESTORE_LOGGED_IN_USER', loggedInUser: user });
     };
 
     bootstrapAsync();
@@ -70,15 +72,19 @@ function AuthProvider({children}) {
             password,
           });
     
-          const {token} = response.data;
+          const user = response.data;
 
-          SecureStore.setItemAsync('token', token);
-          authDispatch({ type: 'LOGIN', token: token });
+          await AsyncStorage.setItem(USER_KEY, JSON.stringify(user));
+
+          authDispatch({ type: 'LOGIN', loggedInUser: user});
         } catch (error) {
-          Alert.alert('Incorrect username or password');
+          Alert.alert('Error occurred while logging in');
         }
       },
-      logout: () => authDispatch({ type: 'LOGOUT' }),
+      logout: () => {
+        AsyncStorage.removeItem(USER_KEY);
+        authDispatch({ type: 'LOGOUT' });
+      },
       signUp: async (data) => {
         // In a production app, we need to send user data to server and get a token
         // We will also need to handle errors if sign up failed

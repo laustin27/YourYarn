@@ -1,22 +1,19 @@
-// Grabbed from https://blog.logrocket.com/react-native-jwt-authentication-using-axios-interceptors/
-
-import React, {createContext, useContext} from 'react';
+import React from 'react';
 import axios from 'axios';
 import {AuthContext} from './AuthContext';
+import { API_URL } from '../Constants';
 
-const AxiosContext = createContext(null);
-
-const apiUrl = "https://lake-cherry-troodon.glitch.me"
+const AxiosContext = React.createContext(null);
 
 const AxiosProvider = ({children}) => {
-  const authContext = useContext(AuthContext);
+  const authContext = React.useContext(AuthContext);
 
-  const authAxios = axios.create({ baseURL: apiUrl });
+  const authAxios = axios.create({ baseURL: API_URL });
 
   authAxios.interceptors.request.use(
     config => {
       if (!config.headers.Authorization) {
-        config.headers.Authorization = `Bearer ${authContext.authState.userToken}`;
+        config.headers.Authorization = `Bearer ${authContext.authState.loggedInUser.token}`;
       }
 
       return config;
@@ -33,4 +30,4 @@ const AxiosProvider = ({children}) => {
   );
 };
 
-export {AxiosContext, AxiosProvider, apiUrl};
+export {AxiosContext, AxiosProvider};

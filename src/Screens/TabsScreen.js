@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons'; 
-import Home from '../Home/Home';
-import Yarn from '../Yarn/Yarn';
-import Patterns from '../Patterns/Patterns';
-import Projects from '../Projects/Projects';
-import Profile from '../Profile/Profile';
+import ProjectsScreen from './ProjectsScreen';
+import ProfileScreen from './ProfileScreen';
+import PatternScreen from './PatternsScreen';
+import HomeScreen from './HomeScreen';
+import YarnScreen from './YarnScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -28,11 +27,11 @@ export default function TabsScreen() {
             tabBarActiveTintColor: 'tomato',
         })}
     >
-        <Tab.Screen name="Home"     component={Home}     />
-        <Tab.Screen name="Yarn"     component={Yarn}     />
-        <Tab.Screen name="Patterns" component={Patterns} />
-        <Tab.Screen name="Projects" component={Projects} />
-        <Tab.Screen name="Profile"  component={Profile}  />
+        <Tab.Screen name="Home"     component={HomeScreen}     />
+        <Tab.Screen name="Yarn"     component={YarnScreen}     />
+        <Tab.Screen name="Patterns" component={PatternScreen} />
+        <Tab.Screen name="Projects" component={ProjectsScreen} />
+        <Tab.Screen name="Profile"  component={ProfileScreen}  />
     </Tab.Navigator>
   );
 }
