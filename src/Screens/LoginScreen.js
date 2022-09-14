@@ -4,63 +4,125 @@ import {
     Text,
     StyleSheet,
     SafeAreaView,
-    TextInput
+    TextInput,
+    Platform
   } from 'react-native';
   import React, {useContext, useState} from 'react';
   import {AuthContext} from '../Context/AuthContext';
 import {inputStyles } from '../Styles/InputStyles';
 import PrimaryButton from '../Helpers/PrimaryButton';
+
+function WebLogin() {
+    return (
+        <SafeAreaView style={webStyles.container}>
+            <View style={webStyles.leftSection}>
+                <LoginForm />
+            </View>
+            <View style={webStyles.rightSection} />
+        </SafeAreaView>
+    )
+}
   
-  function LoginScreen() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+function LoginForm() {
+    const [username, setUsername] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    const [isLoggingIn, setLoggingIn] = React.useState(false);
   
     const {authContext} = useContext(AuthContext);
   
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={styles.logo}>Your Yarn</Text>
+        <Text style={styles.logo}>Logo Here</Text>
         <View style={styles.form}>
-          <TextInput
-            style={inputStyles.login}
-            placeholder="Username"
-            placeholderTextColor="grey"
-            autoCapitalize="none"
-            onChangeText={text => setUsername(text)}
-            value={username}
-          />
+            <Text>Username</Text>
+            <TextInput
+                style={inputStyles.login}
+                autoCapitalize="none"
+                onChangeText={text => setUsername(text)}
+                value={username}
+            />
   
-          <TextInput
-            style={inputStyles.login}
-            placeholder="Password"
-            placeholderTextColor="grey"
-            secureTextEntry
-            onChangeText={text => setPassword(text)}
-            value={password}
-          />
+            <Text style={{marginTop: '4%'}}>Password</Text>
+            <TextInput
+                style={inputStyles.login}
+                secureTextEntry
+                onChangeText={text => setPassword(text)}
+                value={password}
+            />
         </View>
-        <PrimaryButton onPress={() => authContext.login(username, password)} text={'Sign In'} />
+        <PrimaryButton 
+            onPress={() => {
+                setLoggingIn(true);
+                authContext.login(username, password);
+            }} 
+            text={isLoggingIn ? 'Signing in...' : 'Sign in'}
+            disabled={isLoggingIn || username == '' || password == ''}
+        />
       </SafeAreaView>
     );
-  };
-  
-  const styles = StyleSheet.create({
+};
+
+function LoginScreen() {
+    if (Platform.OS === 'web') {
+        console.log('on web');
+        return <WebLogin />
+    }
+
+    return <LoginForm />
+}
+
+
+const webStyles = StyleSheet.create({
     container: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    leftSection : {
+        height: '100vh',
+        width: '50%',
+        boxShadow: '1px 0 5px #888',
+        zIndex: 99
+    },
+    rightSection : {
+        height: '100vh',
+        width: '50%',
+        backgroundColor: '#ffcfda',
+    }
+});
+  
+const styles = StyleSheet.create({
+    container: {
+        fontFamily: 'San Francisco',
         flex: 1,
-        backgroundColor: '#ffacaf',
+        backgroundColor: 'white',
         alignItems: 'center',
-        justifyContent: 'flex-start',
+         ...Platform.select({
+            web: {
+                justifyContent: 'center',
+            },
+            default: {
+                justifyContent: 'flex-start',
+            }
+        }),
         width: '100%',
     },
     logo: {
         fontSize: 20,
-        color: '#fff',
-        margin: '5%',
+        color: '#42385d',
+        margin: '5%'
     },
     form: {
-        width: '80%',
-        margin: '5%',
+        ...Platform.select({
+            web: {
+                width: '60%',
+            },
+            default: {
+                width: '80%',
+            }
+        }),
+        marginTop: '3%',
+        marginBottom: '6%',
     }
-  });
+});
   
-  export default LoginScreen;
+export default LoginScreen;

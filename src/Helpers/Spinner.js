@@ -8,6 +8,12 @@ const Spinner = () => (
   </View>
 );
 
+const SmallSpinner = () => (
+  <View style={styles.container}>
+    <ActivityIndicator size="small" color="#007aff" />
+  </View>
+);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -16,4 +22,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Spinner;
+export {Spinner, SmallSpinner};

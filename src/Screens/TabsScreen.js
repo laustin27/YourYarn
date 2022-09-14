@@ -24,7 +24,7 @@ export default function TabsScreen() {
                 }
             },
             tabBarInactiveTintColor: 'gray',
-            tabBarActiveTintColor: 'tomato',
+            tabBarActiveTintColor: '#42385d',
         })}
     >
         <Tab.Screen name="Home"     component={HomeScreen}     />

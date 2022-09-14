@@ -28,7 +28,7 @@ const App = () => {
           ) : (
             // User is signed in
             <Stack.Screen 
-              name="Tabs" 
+              name="Dashboard" 
               component={TabsScreen}
               options={{headerShown: false}}
                />
