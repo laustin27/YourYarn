@@ -85,13 +85,20 @@ function AuthProvider({children}) {
         AsyncStorage.removeItem(USER_KEY);
         authDispatch({ type: 'LOGOUT' });
       },
-      signUp: async (data) => {
+      signUp: async (username, password) => {
         // In a production app, we need to send user data to server and get a token
         // We will also need to handle errors if sign up failed
         // After getting token, we need to persist the token using `SecureStore` or any other encrypted storage
         // In the example, we'll use a dummy token
+        const response = await publicAxios.post('/createAccount', {
+          username,
+          password,
+        });
+    
+        const user = response.data;
 
-        authDispatch({ type: 'LOGIN', token: 'dummy-auth-token' });
+        await AsyncStorage.setItem(USER_KEY, JSON.stringify(user));
+        authDispatch({ type: 'LOGIN', loggedInUser: user});
       },
     }),
     []

@@ -2,28 +2,29 @@
 import {
     View,
     Text,
-    StyleSheet,
     SafeAreaView,
     TextInput,
     Platform
-  } from 'react-native';
-  import React, {useContext, useState} from 'react';
-  import {AuthContext} from '../Context/AuthContext';
+} from 'react-native';
+import React, {useContext} from 'react';
+import {AuthContext} from '../Context/AuthContext';
 import {inputStyles } from '../Styles/InputStyles';
 import PrimaryButton from '../Helpers/PrimaryButton';
+import { Link } from '@react-navigation/native';
+import { loginAndSignUpFormStyles, webLoginAndSignUpStyles } from '../Styles/LoginAndSignUpStyles';
 
 function WebLogin() {
     return (
-        <SafeAreaView style={webStyles.container}>
-            <View style={webStyles.leftSection}>
+        <SafeAreaView style={webLoginAndSignUpStyles.container}>
+            <View style={webLoginAndSignUpStyles.leftSection}>
                 <LoginForm />
             </View>
-            <View style={webStyles.rightSection} />
+            <View style={webLoginAndSignUpStyles.rightSection} />
         </SafeAreaView>
     )
 }
   
-function LoginForm() {
+function LoginForm({navigation}) {
     const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [isLoggingIn, setLoggingIn] = React.useState(false);
@@ -31,9 +32,9 @@ function LoginForm() {
     const {authContext} = useContext(AuthContext);
   
     return (
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.logo}>Logo Here</Text>
-        <View style={styles.form}>
+      <SafeAreaView style={loginAndSignUpFormStyles.container}>
+        <Text style={loginAndSignUpFormStyles.logo}>Logo Here</Text>
+        <View style={loginAndSignUpFormStyles.form}>
             <Text>Username</Text>
             <TextInput
                 style={inputStyles.login}
@@ -58,71 +59,25 @@ function LoginForm() {
             text={isLoggingIn ? 'Signing in...' : 'Sign in'}
             disabled={isLoggingIn || username == '' || password == ''}
         />
+        <View style={loginAndSignUpFormStyles.signUpText}>
+            <Text>
+                <Text>Don't have an account? </Text>
+                <Link to={{ screen: 'Sign up'}} style={{fontWeight: 'bold'}}>
+                    Create one now
+                </Link>
+            </Text>
+        </View>
+     
       </SafeAreaView>
     );
 };
 
-function LoginScreen() {
+function LoginScreen({navigation}) {
     if (Platform.OS === 'web') {
-        console.log('on web');
-        return <WebLogin />
+        return <WebLogin navigation={navigation} />
     }
 
-    return <LoginForm />
+    return <LoginForm navigation={navigation} />
 }
 
-
-const webStyles = StyleSheet.create({
-    container: {
-        display: 'flex',
-        flexDirection: 'row',
-    },
-    leftSection : {
-        height: '100vh',
-        width: '50%',
-        boxShadow: '1px 0 5px #888',
-        zIndex: 99
-    },
-    rightSection : {
-        height: '100vh',
-        width: '50%',
-        backgroundColor: '#ffcfda',
-    }
-});
-  
-const styles = StyleSheet.create({
-    container: {
-        fontFamily: 'San Francisco',
-        flex: 1,
-        backgroundColor: 'white',
-        alignItems: 'center',
-         ...Platform.select({
-            web: {
-                justifyContent: 'center',
-            },
-            default: {
-                justifyContent: 'flex-start',
-            }
-        }),
-        width: '100%',
-    },
-    logo: {
-        fontSize: 20,
-        color: '#42385d',
-        margin: '5%'
-    },
-    form: {
-        ...Platform.select({
-            web: {
-                width: '60%',
-            },
-            default: {
-                width: '80%',
-            }
-        }),
-        marginTop: '3%',
-        marginBottom: '6%',
-    }
-});
-  
 export default LoginScreen;

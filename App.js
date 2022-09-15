@@ -5,6 +5,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import LoginScreen from './src/Screens/LoginScreen';
 import TabsScreen from './src/Screens/TabsScreen';
 import LoadingScreen from './src/Screens/LoadingScreen';
+import SignUpScreen from './src/Screens/SignUpScreen';
 
 const Stack = createStackNavigator();
 
@@ -15,16 +16,27 @@ const App = () => {
     <Stack.Navigator>
       {authState.isLoading && <Stack.Screen name="Loading" component={LoadingScreen} />}
       {authState.loggedInUser == null ? (
-            // No token found, user isn't signed in
-            <Stack.Screen
-              name="Login"
-              component={LoginScreen}
-              options={{
-                headerShown: false,
-                // When logging out, a pop animation feels intuitive
-                animationTypeForReplace: authState.isSignout ? 'pop' : 'push',
-              }}
-            />
+            <React.Fragment>
+              <Stack.Screen
+                name="Login"
+                options={{
+                  headerShown: false,
+                  // When logging out, a pop animation feels intuitive
+                  animationTypeForReplace: authState.isSignout ? 'pop' : 'push',
+                }}
+              >
+                {(props) => <LoginScreen {...props} />}
+              </Stack.Screen>
+              <Stack.Screen
+                name="Sign up"
+                component={SignUpScreen}
+                options={{
+                  headerShown: false,
+                  // When logging out, a pop animation feels intuitive
+                  animationTypeForReplace : 'push',
+                }}
+              />
+            </React.Fragment>
           ) : (
             // User is signed in
             <Stack.Screen 
