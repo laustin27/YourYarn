@@ -52,9 +52,10 @@ function LoginForm({navigation}) {
             />
         </View>
         <PrimaryButton 
-            onPress={() => {
+            onPress={async () => {
                 setLoggingIn(true);
-                authContext.login(username, password);
+                await authContext.login(username, password);
+                setLoggingIn(false);
             }} 
             text={isLoggingIn ? 'Signing in...' : 'Sign in'}
             disabled={isLoggingIn || username == '' || password == ''}

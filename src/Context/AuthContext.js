@@ -71,12 +71,16 @@ function AuthProvider({children}) {
             username,
             password,
           });
-    
-          const user = response.data;
 
-          await AsyncStorage.setItem(USER_KEY, JSON.stringify(user));
+          if (response.data.success == false) {
+            Alert.alert("Invalid username or password");
+          } else {
+            const user = response.data;
 
-          authDispatch({ type: 'LOGIN', loggedInUser: user});
+            await AsyncStorage.setItem(USER_KEY, JSON.stringify(user));
+
+            authDispatch({ type: 'LOGIN', loggedInUser: user});
+          }
         } catch (error) {
           Alert.alert('Error occurred while logging in');
         }
