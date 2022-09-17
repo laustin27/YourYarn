@@ -10,22 +10,12 @@ import React, {useContext} from 'react';
 import {AuthContext} from '../Context/AuthContext';
 import {inputStyles } from '../Styles/InputStyles';
 import PrimaryButton from '../Helpers/PrimaryButton';
-import { loginAndSignUpFormStyles, webLoginAndSignUpStyles } from '../Styles/LoginAndSignUpStyles';
+import { loginAndSignUpFormStyles } from '../Styles/LoginAndSignUpStyles';
 import { FontAwesome } from '@expo/vector-icons';
 import { Link } from '@react-navigation/native';
-
-function WebSignUp({navigation}) {
-    return (
-        <SafeAreaView style={webLoginAndSignUpStyles.container}>
-            <View style={webLoginAndSignUpStyles.leftSection}>
-                <SignUpForm navigation={navigation}/>
-            </View>
-            <View style={webLoginAndSignUpStyles.rightSection} />
-        </SafeAreaView>
-    )
-}
+import PreAuthWebContainer from '../Wrappers/PreAuthWebContainer';
   
-function SignUpForm({navigation}) {
+function SignUpForm() {
     const [username, setUsername]                           = React.useState('');
     const [password, setPassword]                           = React.useState('');
     const [confirmPassword, setConfirmPassword]             = React.useState('');
@@ -88,12 +78,16 @@ function SignUpForm({navigation}) {
     );
 };
 
-function SignUpScreen({navigation}) {
+function SignUpScreen() {
     if (Platform.OS === 'web') {
-        return <WebSignUp navigation={navigation} />
+        return (
+            <PreAuthWebContainer>
+                <SignUpForm/>
+            </PreAuthWebContainer>
+        )
     }
 
-    return <SignUpForm navigation={navigation} />
+    return <SignUpForm />
 }
   
 export default SignUpScreen;

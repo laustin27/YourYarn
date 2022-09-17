@@ -6,6 +6,7 @@ import LoginScreen from './src/Screens/LoginScreen';
 import TabsScreen from './src/Screens/TabsScreen';
 import LoadingScreen from './src/Screens/LoadingScreen';
 import SignUpScreen from './src/Screens/SignUpScreen';
+import GreetingScreen from './src/Screens/GreetingScreen';
 
 const Stack = createStackNavigator();
 
@@ -18,21 +19,28 @@ const App = () => {
       {authState.loggedInUser == null ? (
             <React.Fragment>
               <Stack.Screen
+                name="Greetings"
+                options={{
+                  headerShown: false,
+                  animationTypeForReplace: 'push',
+                }}
+              >
+                {(props) => <GreetingScreen {...props} />}
+              </Stack.Screen>
+              <Stack.Screen
                 name="Login"
+                component={LoginScreen}
                 options={{
                   headerShown: false,
                   // When logging out, a pop animation feels intuitive
                   animationTypeForReplace: authState.isSignout ? 'pop' : 'push',
                 }}
-              >
-                {(props) => <LoginScreen {...props} />}
-              </Stack.Screen>
+              />
               <Stack.Screen
                 name="Sign up"
                 component={SignUpScreen}
                 options={{
                   headerShown: false,
-                  // When logging out, a pop animation feels intuitive
                   animationTypeForReplace : 'push',
                 }}
               />

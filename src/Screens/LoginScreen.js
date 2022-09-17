@@ -7,32 +7,22 @@ import {
     Platform,
     Alert
 } from 'react-native';
-import React, {useContext} from 'react';
+import React from 'react';
 import {AuthContext} from '../Context/AuthContext';
 import {inputStyles } from '../Styles/InputStyles';
 import PrimaryButton from '../Helpers/PrimaryButton';
-import { Link } from '@react-navigation/native';
-import { loginAndSignUpFormStyles, webLoginAndSignUpStyles } from '../Styles/LoginAndSignUpStyles';
+import { loginAndSignUpFormStyles } from '../Styles/LoginAndSignUpStyles';
 import ErrorAlert from '../Helpers/ErrorAlert';
-
-function WebLogin() {
-    return (
-        <SafeAreaView style={webLoginAndSignUpStyles.container}>
-            <View style={webLoginAndSignUpStyles.leftSection}>
-                <LoginForm />
-            </View>
-            <View style={webLoginAndSignUpStyles.rightSection} />
-        </SafeAreaView>
-    )
-}
+import PreAuthWebContainer from '../Wrappers/PreAuthWebContainer';
+import StyledLink from '../Helpers/StyledLink';
   
-function LoginForm({navigation}) {
+function LoginForm() {
     const [username, setUsername]         = React.useState('');
     const [password, setPassword]         = React.useState('');
     const [isLoggingIn, setLoggingIn]     = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState('');
   
-    const {authContext} = useContext(AuthContext);
+    const {authContext} = React.useContext(AuthContext);
   
     return (
       <SafeAreaView style={loginAndSignUpFormStyles.container}>
@@ -80,9 +70,7 @@ function LoginForm({navigation}) {
         <View style={loginAndSignUpFormStyles.signUpText}>
             <Text>
                 <Text>Don't have an account? </Text>
-                <Link to={{ screen: 'Sign up'}} style={{fontWeight: 'bold'}}>
-                    Create one now
-                </Link>
+                <StyledLink to={'Sign up'} text={'Create one now'} />
             </Text>
         </View>
      
@@ -90,12 +78,16 @@ function LoginForm({navigation}) {
     );
 };
 
-function LoginScreen({navigation}) {
+function LoginScreen() {
     if (Platform.OS === 'web') {
-        return <WebLogin navigation={navigation} />
+        return (
+            <PreAuthWebContainer>
+                <LoginForm />
+            </PreAuthWebContainer>
+        )
     }
 
-    return <LoginForm navigation={navigation} />
+    return <LoginForm />
 }
 
 export default LoginScreen;

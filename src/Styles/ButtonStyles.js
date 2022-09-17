@@ -17,7 +17,8 @@ const buttonStyles = (isPressed, disabled) => StyleSheet.create({
         borderColor: '#42385d',
         borderWidth: 1,
         backgroundColor: '#42385d',
-        opacity: disabled ? 0.3 : (isPressed ? .75 : 1)
+        opacity: disabled ? 0.3 : (isPressed ? .75 : 1),
+        boxShadow: '2px 2px 5px #888',
     }
 });
 
