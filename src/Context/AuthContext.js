@@ -71,18 +71,19 @@ function AuthProvider({children}) {
             username,
             password,
           });
+          const user = response.data;
 
-          if (response.data.success == false) {
-            Alert.alert("Invalid username or password");
-          } else {
-            const user = response.data;
+          AsyncStorage.setItem(USER_KEY, JSON.stringify(user));
 
-            await AsyncStorage.setItem(USER_KEY, JSON.stringify(user));
-
-            authDispatch({ type: 'LOGIN', loggedInUser: user});
-          }
+          authDispatch({ type: 'LOGIN', loggedInUser: user });
+          return { success: true };
         } catch (error) {
-          Alert.alert('Error occurred while logging in');
+          return {
+            success: false,
+            errorMessage: error.response.status == 400
+              ? 'Invalid username or password'
+              : 'Error occurred while logging in'
+          };
         }
       },
       logout: () => {

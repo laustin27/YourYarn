@@ -4,7 +4,8 @@ import {
     Text,
     SafeAreaView,
     TextInput,
-    Platform
+    Platform,
+    Alert
 } from 'react-native';
 import React, {useContext} from 'react';
 import {AuthContext} from '../Context/AuthContext';
@@ -12,6 +13,7 @@ import {inputStyles } from '../Styles/InputStyles';
 import PrimaryButton from '../Helpers/PrimaryButton';
 import { Link } from '@react-navigation/native';
 import { loginAndSignUpFormStyles, webLoginAndSignUpStyles } from '../Styles/LoginAndSignUpStyles';
+import ErrorAlert from '../Helpers/ErrorAlert';
 
 function WebLogin() {
     return (
@@ -25,15 +27,20 @@ function WebLogin() {
 }
   
 function LoginForm({navigation}) {
-    const [username, setUsername] = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const [isLoggingIn, setLoggingIn] = React.useState(false);
+    const [username, setUsername]         = React.useState('');
+    const [password, setPassword]         = React.useState('');
+    const [isLoggingIn, setLoggingIn]     = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState('');
   
     const {authContext} = useContext(AuthContext);
   
     return (
       <SafeAreaView style={loginAndSignUpFormStyles.container}>
         <Text style={loginAndSignUpFormStyles.logo}>Logo Here</Text>
+        {
+            errorMessage && 
+            <ErrorAlert message={errorMessage} />
+        }
         <View style={loginAndSignUpFormStyles.form}>
             <Text>Username</Text>
             <TextInput
@@ -54,7 +61,17 @@ function LoginForm({navigation}) {
         <PrimaryButton 
             onPress={async () => {
                 setLoggingIn(true);
-                await authContext.login(username, password);
+                let loginResponse = await authContext.login(username, password);
+                let errorMessage = loginResponse.errorMessage;
+
+                if (errorMessage) {
+                    if (Platform.OS == 'web') {
+                        setErrorMessage(errorMessage);
+                    } else {
+                        Alert.alert(errorMessage)
+                    }
+                    
+                }
                 setLoggingIn(false);
             }} 
             text={isLoggingIn ? 'Signing in...' : 'Sign in'}
