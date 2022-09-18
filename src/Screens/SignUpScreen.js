@@ -4,7 +4,8 @@ import {
     Text,
     SafeAreaView,
     TextInput,
-    Platform
+    Platform,
+    Alert
   } from 'react-native';
 import React, {useContext} from 'react';
 import {AuthContext} from '../Context/AuthContext';
@@ -21,6 +22,7 @@ function SignUpForm() {
     const [confirmPassword, setConfirmPassword]             = React.useState('');
     const [showPasswordsMatchError, setPasswordsMatchError] = React.useState(false);
     const [isSigningUp, setSigningUp]                       = React.useState(false);
+    const [errorMessage, setErrorMessage]                   = React.useState('');
   
     const {authContext} = useContext(AuthContext);
 
@@ -39,6 +41,10 @@ function SignUpForm() {
             <Text>  Back to Login</Text>
         </Link>
         <Text style={loginAndSignUpFormStyles.logo}>Create your account!</Text>
+        {
+            errorMessage && 
+            <ErrorAlert message={errorMessage} />
+        }
         <View style={loginAndSignUpFormStyles.form}>
             <Text>Username</Text>
             <TextInput
@@ -67,9 +73,20 @@ function SignUpForm() {
             
         </View>
         <PrimaryButton 
-            onPress={() => {
+            onPress={async () => {
                 setSigningUp(true);
-                authContext.signUp(username, password);
+                let signUpResponse = await authContext.signUp(username, password);
+                let errorMessage = signUpResponse.errorMessage;
+
+                if (errorMessage) {
+                    if (Platform.OS == 'web') {
+                        setErrorMessage(errorMessage);
+                    } else {
+                        Alert.alert(errorMessage)
+                    }
+                    
+                }
+                setSigningUp(false);
             }} 
             text={isSigningUp ? 'Creating account...' : 'Sign up'}
             disabled={isSigningUp || showPasswordsMatchError || username == '' || password == ''}

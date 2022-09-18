@@ -12,7 +12,7 @@ export default function ProfileScreen() {
 
     return (
         <Body>
-            <Text style={{marginBottom: '5%'}}>{`Hi there ${loggedInUser?.firstName}!`}</Text>
+            <Text style={{marginBottom: '5%'}}>{`Hi there ${loggedInUser?.username}!`}</Text>
             <PrimaryButton
                 onPress={() => {
                     setLoggingOut(true);
