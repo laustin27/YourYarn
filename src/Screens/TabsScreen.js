@@ -3,35 +3,85 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons'; 
 import ProjectsScreen from './ProjectsScreen';
-import ProfileScreen from './ProfileScreen';
 import PatternScreen from './PatternsScreen';
 import HomeScreen from './HomeScreen';
 import YarnScreen from './YarnScreen';
+import {Text, StyleSheet} from 'react-native';
+import CreateIconAndModal from './Modals/CreateIconAndModal';
 
 const Tab = createBottomTabNavigator();
+
+const AddScreenComponent = () => {
+  return null
+}
+
+function Header({children}) {
+  return (
+    <Text style={styles.header}>
+      {children}
+    </Text>
+  );
+}
 
 export default function TabsScreen() {
   return (
     <Tab.Navigator
-        screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, color, size }) => {
-                switch(route.name) {
-                    case 'Home'     : return <FontAwesome name="home"      size={size} color={color} />;
-                    case 'Yarn'     : return <FontAwesome name="circle"    size={size} color={color} />;
-                    case 'Patterns' : return <FontAwesome name="list-alt"  size={size} color={color} />;
-                    case 'Projects' : return <Ionicons    name="construct" size={size} color={color} />;
-                    case 'Profile'  : return <FontAwesome name="user"      size={size} color={color} />;
-                }
-            },
-            tabBarInactiveTintColor: 'gray',
+        screenOptions={() => ({
+            tabBarInactiveTintColor: 'grey',
             tabBarActiveTintColor: '#42385d',
+            tabBarStyle: { paddingTop: 5 },
+            headerRight: () => (
+              <FontAwesome name="user-circle" size={24} color="grey" style={{marginRight: 15}}/>
+            ),
+            headerTitle: (props) => <Header children={props.children} />
         })}
     >
-        <Tab.Screen name="Home"     component={HomeScreen}     />
-        <Tab.Screen name="Yarn"     component={YarnScreen}     />
-        <Tab.Screen name="Patterns" component={PatternScreen} />
-        <Tab.Screen name="Projects" component={ProjectsScreen} />
-        <Tab.Screen name="Profile"  component={ProfileScreen}  />
+        <Tab.Screen name="Home" 
+                    component={HomeScreen} 
+                    options={{
+                        tabBarIcon: ({ size, color }) => (
+                          <FontAwesome name="home" size={size} color={color} />
+                        )
+                    }}
+        />
+        <Tab.Screen name="Yarn"     
+                    component={YarnScreen}    
+                    options={{
+                        tabBarIcon: ({ size, color }) => (
+                          <FontAwesome name="circle" size={size} color={color} />
+                        )
+                    }} 
+        />
+        <Tab.Screen name="Add" 
+                    component={AddScreenComponent} 
+                    options={({navigation}) => ({
+                        tabBarButton: () => (<CreateIconAndModal navigation={navigation} />)
+                    })}
+        />
+        <Tab.Screen name="Patterns" 
+                    component={PatternScreen}
+                    options={{
+                        tabBarIcon: ({ size, color }) => (
+                          <FontAwesome name="list-alt" size={size} color={color} />
+                        )
+                    }} 
+        />
+        <Tab.Screen name="Projects" 
+                    component={ProjectsScreen}
+                    options={{
+                        tabBarIcon: ({ size, color }) => (
+                          <Ionicons name="construct" size={size} color={color} />
+                        )
+                    }} 
+        />
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    position: 'absolute', 
+    left: -175,
+    fontSize: 20
+  }
+});

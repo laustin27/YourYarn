@@ -1,12 +1,16 @@
 // Grabbed from https://blog.logrocket.com/react-native-jwt-authentication-using-axios-interceptors/
 import React from 'react';
 import {AuthContext} from './src/Context/AuthContext';
-import {createStackNavigator} from '@react-navigation/stack';
+import {CardStyleInterpolators, createStackNavigator} from '@react-navigation/stack';
 import LoginScreen from './src/Screens/LoginScreen';
 import TabsScreen from './src/Screens/TabsScreen';
 import LoadingScreen from './src/Screens/LoadingScreen';
 import SignUpScreen from './src/Screens/SignUpScreen';
 import GreetingScreen from './src/Screens/GreetingScreen';
+import AddYarnModal from './src/Screens/Modals/AddYarnModal';
+import AddPatternModal from './src/Screens/Modals/AddPatternModal';
+import StartProjectModal from './src/Screens/Modals/StartProjectModal';
+import { addModalOptions, cardAnimationConfig } from './src/Constants';
 
 const Stack = createStackNavigator();
 
@@ -15,7 +19,7 @@ const App = () => {
 
   return (
     <Stack.Navigator>
-      {authState.isLoading && <Stack.Screen name="Loading" component={LoadingScreen} />}
+      {authState.isLoading ? <Stack.Screen name="Loading" component={LoadingScreen} /> : null}
       {authState.loggedInUser == null ? (
             <React.Fragment>
               <Stack.Screen
@@ -47,11 +51,28 @@ const App = () => {
             </React.Fragment>
           ) : (
             // User is signed in
-            <Stack.Screen 
-              name="Dashboard" 
-              component={TabsScreen}
-              options={{headerShown: false}}
-               />
+            <React.Fragment>
+              <Stack.Screen 
+                name="Tabs" 
+                component={TabsScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen 
+                name="Add Yarn" 
+                component={AddYarnModal}
+                options={addModalOptions}
+              />
+              <Stack.Screen 
+                name="Add Pattern" 
+                component={AddPatternModal}
+                options={addModalOptions}
+              />
+              <Stack.Screen 
+                name="Start Project" 
+                component={StartProjectModal}
+                options={addModalOptions}
+              />
+            </React.Fragment>
           )}
     </Stack.Navigator>
   )

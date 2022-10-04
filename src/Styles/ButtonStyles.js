@@ -1,19 +1,19 @@
 import {StyleSheet, Platform} from 'react-native';
 
-const buttonStyles = (isPressed, disabled) => StyleSheet.create({
+const buttonStyles = (isPressed, disabled, width) => StyleSheet.create({
     primary: {
         fontSize: 16,
         ...Platform.select({
             web: {
-              width: '40%'
+              width: width ? width : '40%'
             },
             default: {
-                width: '80%',
+                width: width ? width : '80%',
             }
         }),
         alignItems: 'center',
-        paddingVertical: 12,
-        borderRadius: 5,
+        paddingVertical: 15,
+        borderRadius: 10,
         borderColor: '#42385d',
         borderWidth: 1,
         backgroundColor: '#42385d',

@@ -42,8 +42,7 @@ function SignUpForm() {
         </Link>
         <Text style={loginAndSignUpFormStyles.logo}>Create your account!</Text>
         {
-            errorMessage && 
-            <ErrorAlert message={errorMessage} />
+            errorMessage ? <ErrorAlert message={errorMessage} /> : null
         }
         <View style={loginAndSignUpFormStyles.form}>
             <Text>Username</Text>

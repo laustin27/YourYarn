@@ -2,10 +2,10 @@ import * as React from 'react';
 import { Text, Pressable} from 'react-native';
 import { buttonStyles, buttonTextStyles } from '../Styles/ButtonStyles';
 
-function PrimaryButton({onPress, text, disabled, children}) {
+function PrimaryButton({onPress, text, disabled, width, children}) {
     return (
         <Pressable 
-            style={({pressed}) => buttonStyles(pressed, disabled).primary} 
+            style={({pressed}) => buttonStyles(pressed, disabled, width).primary} 
             onPress={onPress}
             disabled={disabled}
         >
