@@ -8,6 +8,7 @@ import HomeScreen from './HomeScreen';
 import YarnScreen from './YarnScreen';
 import {Text, StyleSheet} from 'react-native';
 import CreateIconAndModal from './Modals/CreateIconAndModal';
+import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,7 +24,7 @@ function Header({children}) {
   );
 }
 
-export default function TabsScreen() {
+export default function TabsScreen({navigation}) {
   return (
     <Tab.Navigator
         screenOptions={() => ({
@@ -31,9 +32,12 @@ export default function TabsScreen() {
             tabBarActiveTintColor: '#42385d',
             tabBarStyle: { paddingTop: 5 },
             headerRight: () => (
-              <FontAwesome name="user-circle" size={24} color="grey" style={{marginRight: 15}}/>
+              <Pressable onPress={() => {navigation.navigate("Profile")}}>
+                <FontAwesome name="user-circle" size={24} color="grey" style={{marginRight: 15}}/>
+              </Pressable>
             ),
-            headerTitle: (props) => <Header children={props.children} />
+            headerTitle: (props) => <Header children={props.children} />,
+            headerShadowVisible: true
         })}
     >
         <Tab.Screen name="Home" 

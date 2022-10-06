@@ -4,13 +4,12 @@ import {AxiosProvider} from './src/Context/AxiosContext';
 import React from 'react';
 import registerRootComponent from 'expo/build/launch/registerRootComponent';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const MyTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: 'rgb(255, 45, 85)',
+    background: '#FFF',
   },
 };
 

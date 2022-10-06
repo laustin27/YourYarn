@@ -9,12 +9,13 @@ import {
 } from 'react-native';
 import React from 'react';
 import {AuthContext} from '../Context/AuthContext';
-import {inputStyles } from '../Styles/InputStyles';
 import PrimaryButton from '../Helpers/PrimaryButton';
 import { loginAndSignUpFormStyles } from '../Styles/LoginAndSignUpStyles';
 import ErrorAlert from '../Helpers/ErrorAlert';
 import PreAuthWebContainer from '../Wrappers/PreAuthWebContainer';
 import StyledLink from '../Helpers/StyledLink';
+import {FormGroup, FormGroupSpacer } from '../Helpers/FormGroup';
+import ValidationRules from '../ValidationRules';
   
 function LoginForm() {
     const [username, setUsername]         = React.useState('');
@@ -32,20 +33,19 @@ function LoginForm() {
             <ErrorAlert message={errorMessage} />
         }
         <View style={loginAndSignUpFormStyles.form}>
-            <Text>Username</Text>
-            <TextInput
-                style={inputStyles.login}
-                autoCapitalize="none"
-                onChangeText={text => setUsername(text)}
+            <FormGroup
+                label={'Username'}
                 value={username}
+                onChange={setUsername}
+                maxLength={ValidationRules.username.maxLength}
             />
-  
-            <Text style={{marginTop: '4%'}}>Password</Text>
-            <TextInput
-                style={inputStyles.login}
-                secureTextEntry
-                onChangeText={text => setPassword(text)}
+            <FormGroupSpacer />
+            <FormGroup
+                label={'Password'}
                 value={password}
+                onChange={setPassword}
+                isSecure={true}
+                maxLength={ValidationRules.password.maxLength}
             />
         </View>
         <PrimaryButton 

@@ -1,16 +1,19 @@
 // Grabbed from https://blog.logrocket.com/react-native-jwt-authentication-using-axios-interceptors/
 import React from 'react';
 import {AuthContext} from './src/Context/AuthContext';
-import {CardStyleInterpolators, createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import LoginScreen from './src/Screens/LoginScreen';
 import TabsScreen from './src/Screens/TabsScreen';
 import LoadingScreen from './src/Screens/LoadingScreen';
+import ProfileScreen from './src/Screens/ProfileScreen';
 import SignUpScreen from './src/Screens/SignUpScreen';
 import GreetingScreen from './src/Screens/GreetingScreen';
 import AddYarnModal from './src/Screens/Modals/AddYarnModal';
 import AddPatternModal from './src/Screens/Modals/AddPatternModal';
 import StartProjectModal from './src/Screens/Modals/StartProjectModal';
-import { addModalOptions, cardAnimationConfig } from './src/Constants';
+import { addModalOptions } from './src/Constants';
+import { Pressable, Text, View } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 
 const Stack = createStackNavigator();
 
@@ -18,7 +21,15 @@ const App = () => {
   const {authState} = React.useContext(AuthContext);
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={() => ({
+            headerTitle: (props) => <Text style={{fontSize: 20}}>{props.children}</Text>,
+            headerBackTitleVisible: false,
+            headerBackTitleStyle: {
+              fontSize: 14
+            }
+      })}
+    >
       {authState.isLoading ? <Stack.Screen name="Loading" component={LoadingScreen} /> : null}
       {authState.loggedInUser == null ? (
             <React.Fragment>
@@ -71,6 +82,10 @@ const App = () => {
                 name="Start Project" 
                 component={StartProjectModal}
                 options={addModalOptions}
+              />
+              <Stack.Screen 
+                name="Profile" 
+                component={ProfileScreen}
               />
             </React.Fragment>
           )}

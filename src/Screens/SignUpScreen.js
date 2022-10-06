@@ -15,19 +15,21 @@ import { loginAndSignUpFormStyles } from '../Styles/LoginAndSignUpStyles';
 import { FontAwesome } from '@expo/vector-icons';
 import { Link } from '@react-navigation/native';
 import PreAuthWebContainer from '../Wrappers/PreAuthWebContainer';
+import { FormGroupSpacer, FormGroup } from '../Helpers/FormGroup';
+import ValidationRules from '../ValidationRules';
   
 function SignUpForm() {
-    const [username, setUsername]                           = React.useState('');
-    const [password, setPassword]                           = React.useState('');
-    const [confirmPassword, setConfirmPassword]             = React.useState('');
-    const [showPasswordsMatchError, setPasswordsMatchError] = React.useState(false);
-    const [isSigningUp, setSigningUp]                       = React.useState(false);
-    const [errorMessage, setErrorMessage]                   = React.useState('');
+    const [username, setUsername]                       = React.useState('');
+    const [password, setPassword]                       = React.useState('');
+    const [confirmPassword, setConfirmPassword]         = React.useState('');
+    const [passwordsDoNotMatch, setPasswordsDoNotMatch] = React.useState(false);
+    const [isSigningUp, setSigningUp]                   = React.useState(false);
+    const [errorMessage, setErrorMessage]               = React.useState('');
   
     const {authContext} = useContext(AuthContext);
 
     React.useEffect(() => {
-        setPasswordsMatchError(
+        setPasswordsDoNotMatch(
             password != '' 
             && confirmPassword != ''
             && (password != confirmPassword)
@@ -45,30 +47,31 @@ function SignUpForm() {
             errorMessage ? <ErrorAlert message={errorMessage} /> : null
         }
         <View style={loginAndSignUpFormStyles.form}>
-            <Text>Username</Text>
-            <TextInput
-                style={inputStyles.login}
-                autoCapitalize="none"
-                onChangeText={text => setUsername(text)}
+            <FormGroup
+                label={'Username'}
                 value={username}
+                onChange={setUsername}
+                maxLength={ValidationRules.username.maxLength}
             />
-  
-            <Text style={{marginTop: '4%'}}>Password</Text>
-            <TextInput
-                style={inputStyles.login}
-                secureTextEntry
-                onChangeText={text => setPassword(text)}
+            <FormGroupSpacer />
+            <FormGroup
+                label={'Password'}
                 value={password}
+                onChange={setPassword}
+                isSecure={true}
+                hasError={passwordsDoNotMatch}
+                maxLength={ValidationRules.password.maxLength}
             />
-
-            <Text style={{marginTop: '4%'}}>Confirm Password</Text>
-            <TextInput
-                style={inputStyles.login}
-                secureTextEntry
-                onChangeText={text => setConfirmPassword(text)}
+            <FormGroupSpacer />
+            <FormGroup
+                label={'Confirm Password'}
                 value={confirmPassword}
+                onChange={setConfirmPassword}
+                isSecure={true}
+                hasError={passwordsDoNotMatch}
+                maxLength={ValidationRules.password.maxLength}
             />
-            {showPasswordsMatchError && <Text style={{color: 'red'}}>Please enter the same password twice</Text>}
+            {passwordsDoNotMatch && <Text style={{color: '#E42026'}}>Please enter the same password twice</Text>}
             
         </View>
         <PrimaryButton 
@@ -88,7 +91,7 @@ function SignUpForm() {
                 setSigningUp(false);
             }} 
             text={isSigningUp ? 'Creating account...' : 'Sign up'}
-            disabled={isSigningUp || showPasswordsMatchError || username == '' || password == ''}
+            disabled={isSigningUp || passwordsDoNotMatch || username == '' || password == ''}
         />
       </SafeAreaView>
     );

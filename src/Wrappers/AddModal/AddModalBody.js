@@ -14,6 +14,7 @@ export default function AddModalBody({children}) {
 
 const styles = StyleSheet.create({
     container: {
-        marginBottom: 20
+        marginBottom: 20,
+        paddingTop: 30
     }
 });
